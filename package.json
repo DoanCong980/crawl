@@ -1,0 +1,19 @@
+{
+  "name": "crawldata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DoanCong980/crawl.git"
+  },
+  "author": "doan cong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DoanCong980/crawl/issues"
+  },
+  "homepage": "https://github.com/DoanCong980/crawl#readme"
+}
