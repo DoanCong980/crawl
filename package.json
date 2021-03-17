@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,18 @@
   "bugs": {
     "url": "https://github.com/DoanCong980/crawl/issues"
   },
-  "homepage": "https://github.com/DoanCong980/crawl#readme"
+  "homepage": "https://github.com/DoanCong980/crawl#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.5",
+    "download-pdf": "^0.1.6",
+    "express": "^4.17.1",
+    "form-data": "^4.0.0",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
+    "node-fetch": "^2.6.1",
+    "pdf-parse": "^1.1.1",
+    "request": "^2.88.2",
+    "xlsx": "^0.16.9"
+  }
 }

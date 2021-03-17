@@ -9,8 +9,8 @@ const { response } = require("express");
 const fs = require("fs");
 const XLSX = require("xlsx");
 const https = require("https");
+const pdf = require("pdf-parse");
 const download = require("download-pdf");
-const downloadPdf = require("download-pdf");
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -38,22 +38,6 @@ app.get("/aus", (req, res) => {
       }
     }
   );
-});
-
-app.get("/vne", (req, res) => {
-  request("https://vnexpress.net/", (err, response, body) => {
-    if (err) res.send("loi: ", err);
-    else {
-      let $ = cheerio.load(body);
-      let result = [];
-      $(".main-nav li").each((i, e) => {
-        const item = $(e).text();
-        console.log(item);
-        result.push(item);
-      });
-      res.send(JSON.stringify(result));
-    }
-  });
 });
 
 app.get("/malay", (req, res) => {
@@ -150,22 +134,10 @@ app.get("/sing", async (req, res) => {
   });
   const HTML = await response.text();
   let downloadLinks = await getAllPdfLinks(HTML);
-  downloadPdfFile(downloadLinks);
-  res.send("aaaaaaaaaaaaaaa");
+  //downloadPdfFile(downloadLinks);
+  readPdf();
+  res.send("aaaa");
 });
-
-let downloadPdfFile = async (downloadLinks) => {
-  let fileLocation = "./download";
-  for (let link in downloadLinks) {
-    let options = {
-      directory: fileLocation,
-    };
-    await download(link, options, (er) => {
-      if (err) throw err;
-      console.log(link);
-    });
-  }
-};
 
 let getAllPdfLinks = async (HTML) => {
   let downloadLinks = [];
@@ -173,10 +145,34 @@ let getAllPdfLinks = async (HTML) => {
   $(".field-item.even ul li a").each((index, dom) => {
     let link = "https://www.pss.org.sg";
     link += $(dom).attr("href");
-    //console.log(link);
     downloadLinks.push(link);
   });
   return downloadLinks;
+};
+
+let downloadPdfFile = async (downloadLinks) => {
+  let fileLocation = "./download";
+  for (let link of downloadLinks) {
+    let options = {
+      directory: fileLocation,
+    };
+    download(link, options, (err) => {
+      if (err) throw err;
+      console.log(link);
+    });
+  }
+};
+
+let readPdf = async () => {
+  let data;
+  let dataBuffer = fs.readFileSync(
+    "download/2020_asthma_compiled_price_list.pdf"
+  );
+  let nameOfDrug = new RegExp("//")
+  pdf(dataBuffer).then((data) => {
+    console.log(data);
+    console.log("xuong dong");
+  });
 };
 // --------------------korea--------------------------------------- //
 
