@@ -136,6 +136,7 @@ app.get("/sing", async (req, res) => {
   let downloadLinks = await getAllPdfLinks(HTML);
   //downloadPdfFile(downloadLinks);
   readPdf();
+  //transformPdf();
   res.send("aaaa");
 });
 
@@ -164,15 +165,67 @@ let downloadPdfFile = async (downloadLinks) => {
 };
 
 let readPdf = async () => {
-  let data;
   let dataBuffer = fs.readFileSync(
     "download/2020_asthma_compiled_price_list.pdf"
   );
-  let nameOfDrug = new RegExp("//")
+  let raw;
   pdf(dataBuffer).then((data) => {
-    console.log(data);
-    console.log("xuong dong");
+    raw = data.text;
+    transformPdf(raw);
   });
+};
+
+let transformPdf = async (raw) => {
+  let rawData = raw.split('\n');
+  for(let i=0; i<rawData.length; ++i){
+    console.log(rawData[i]);
+  }
+};
+
+let checkIsDrugFeature = async (ele) => {
+  const concentratioUnit = [
+    "mg/ml",
+    "gm/vil",
+    "gm/pkt",
+    "mcg/ml",
+    "mg/ml",
+    "gm/bag",
+    "unit/ml",
+    "meq/l",
+    "u/ml",
+    "mg/vil",
+    "unt/ml",
+    "mcg/vil",
+    "unt/vil",
+    "MG-PE/ML",
+    "g/ml",
+    "unt/gm",
+    "unt/von",
+    "mmol/l",
+    "iu/ml",
+  ];
+  const normalUnit = [
+    "mg",
+    "ml",
+    "%",
+    "hr",
+    "l",
+    "cal",
+    "mcg",
+    "gm",
+    "meq",
+    "ct",
+    "d",
+    "mm",
+    "unit",
+    "unt",
+  ];
+  const unit = `(${concentratioUnit.join("|")}|${normalUnit.join("|")})+`; // đơn vị tính phải xếp ưu tiên concentraioUnit trước
+  const volume = `[0-9]+[0-9:/.,]*`; // Giá trị số
+  const strength = `${volume} *${unit}`; // tổ hợp giá trị khối lượng
+  let regex = new RegExp(strength, "gi");
+  let strengths = ele.match(regex) || [];
+  return strengths.length > 0;
 };
 // --------------------korea--------------------------------------- //
 
